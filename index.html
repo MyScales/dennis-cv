@@ -875,7 +875,7 @@
         
         // Load Vapi Web SDK
         const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/dist/vapi.umd.js';
+        script.src = 'https://unpkg.com/@vapi-ai/web/dist/vapi.umd.js';
         script.onload = () => {
             console.log('Vapi Web SDK loaded');
             vapi = new window.Vapi(VAPI_PUBLIC_KEY);
