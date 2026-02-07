@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dennis Raisich — Conversational AI Consultant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #2a2a2a;
+            --text: #ffffff;
+            --muted: #888;
+            --accent: #FF4500;
+            --user-bg: #1a1a2e;
+            --ai-bg: #1e1e1e;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+        
+        .header-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .header-info p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        
+        .header-info p span {
+            color: var(--accent);
+        }
+        
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .header-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .header-btn:hover {
+            border-color: var(--accent);
+        }
+        
+        /* Call Button */
+        .call-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .call-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .call-btn.active {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .call-btn.connecting {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.6); }
+        }
+        
+        .call-icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* Call Status Overlay */
+        .call-overlay {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 1000;
+            min-width: 280px;
+        }
+        
+        .call-overlay.visible {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .call-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .call-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF4500, #ff6b35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .call-info h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .call-info p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        
+        .call-info p.live {
+            color: #10b981;
+        }
+        
+        .call-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .call-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .call-action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .call-action-btn.end {
+            background: #ef4444;
+        }
+        
+        .call-action-btn.end:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+        
+        .call-action-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 0;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .message.user .message-content {
+            background: var(--accent);
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.ai .message-content {
+            background: var(--ai-bg);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message.ai .message-content strong {
+            color: var(--accent);
+        }
+        
+        .message.ai .message-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .message.ai .message-content li {
+            margin-bottom: 5px;
+        }
+        
+        .message.ai .message-content code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #2a2a2a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* Typing Indicator */
+        .typing {
+            display: flex;
+            gap: 4px;
+            padding: 14px 18px;
+            background: var(--ai-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: fit-content;
+        }
+        
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: var(--muted);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+        
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
+        }
+        
+        /* Suggestions */
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .suggestion {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .suggestion:hover {
+            border-color: var(--accent);
+            background: rgba(255, 69, 0, 0.1);
+        }
+        
+        /* Input Area */
+        .input-area {
+            padding: 20px 0 30px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: var(--accent);
+        }
+        
+        #userInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 14px;
+            padding: 8px 12px;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        #userInput::placeholder {
+            color: var(--muted);
+        }
+        
+        #sendBtn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        #sendBtn:hover {
+            filter: brightness(1.1);
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 15px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="dennis-photo.jpg" alt="Dennis Raisich" class="avatar">
+        <div class="header-info">
+            <h1>Dennis Raisich <span class="badge">Conversational AI</span></h1>
+            <p><span>●</span> Interaktiver CV — Fragen Sie mich!</p>
+        </div>
+        <div class="header-right">
+            <button id="callBtn" class="call-btn" onclick="toggleCall()">
+                <svg class="call-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                </svg>
+                <span id="callBtnText">Voice Demo 🎤</span>
+            </button>
+            <a href="mailto:d.raisich@gmail.com" class="header-btn">✉️ Kontakt</a>
+            <a href="https://linkedin.com/in/dennis-raisich-435846169" target="_blank" class="header-btn">LinkedIn ↗</a>
+        </div>
+    </header>
+    
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-value">10+</div>
+            <div class="stat-label">Jahre Beratung</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">Voice</div>
+            <div class="stat-label">AI & Chatbots</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">LLM</div>
+            <div class="stat-label">Integration</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">2×</div>
+            <div class="stat-label">Gründer</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">DE</div>
+            <div class="stat-label">Muttersprache</div>
+        </div>
+    </div>
+    
+    <!-- Call Status Overlay -->
+    <div id="callOverlay" class="call-overlay">
+        <div class="call-status">
+            <div class="call-avatar">🎙️</div>
+            <div class="call-info">
+                <h3>Voice AI Demo</h3>
+                <p id="callStatusText">Verbinde...</p>
+            </div>
+        </div>
+        <div class="call-timer" id="callTimer">00:00</div>
+        <div class="call-actions">
+            <button class="call-action-btn end" onclick="endCall()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 01-.29-.7c0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <div class="message ai">
+                <div class="message-content">
+                    <strong>Willkommen! Ich bin Dennis' interaktiver Lebenslauf.</strong><br><br>
+                    Dieses Chat-Interface demonstriert meine Conversational AI Expertise — Sie interagieren gerade mit einem System, das ich selbst konzipiert habe.<br><br>
+                    <strong>💡 Tipp:</strong> Klicken Sie auf "Voice Demo" oben, um auch meine Voice AI Implementierung zu testen!<br><br>
+                    Was möchten Sie wissen?
+                    <div class="suggestions">
+                        <button class="suggestion" onclick="askQuestion('Conversational AI Erfahrung')">🤖 Conversational AI</button>
+                        <button class="suggestion" onclick="askQuestion('Voice AI und Chatbots')">🎙️ Voice & Chatbots</button>
+                        <button class="suggestion" onclick="askQuestion('LLM Integration')">🧠 LLM Integration</button>
+                        <button class="suggestion" onclick="askQuestion('Warum bin ich der Richtige?')">✅ Warum ich?</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-wrapper">
+                <input type="text" id="userInput" placeholder="Fragen Sie nach Erfahrung, Skills, Projekten..." onkeypress="handleKeyPress(event)">
+                <button id="sendBtn" onclick="sendMessage()">Senden</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const responses = {
+            // Conversational AI
+            'conversational ai': `<strong>Conversational AI ist mein Fokus.</strong><br><br>
+                Was ich heute mache:
+                <ul>
+                    <li><strong>Voice AI Systeme</strong> — Voicebots für Kundensupport & Sales</li>
+                    <li><strong>Chatbot-Entwicklung</strong> — Von Konzeption bis Produktion</li>
+                    <li><strong>LLM-Integration</strong> — Claude, GPT-4 für intelligente Dialoge</li>
+                    <li><strong>Conversation Design</strong> — Natürliche, effektive Dialogflüsse</li>
+                </ul>
+                <strong>Dieser CV ist selbst ein Beispiel:</strong> Chat-Interface + Voice AI Demo — beides von mir konzipiert und implementiert.`,
+            
+            'conversational ai erfahrung': `<strong>Conversational AI ist mein Fokus.</strong><br><br>
+                Was ich heute mache:
+                <ul>
+                    <li><strong>Voice AI Systeme</strong> — Voicebots für Kundensupport & Sales</li>
+                    <li><strong>Chatbot-Entwicklung</strong> — Von Konzeption bis Produktion</li>
+                    <li><strong>LLM-Integration</strong> — Claude, GPT-4 für intelligente Dialoge</li>
+                    <li><strong>Conversation Design</strong> — Natürliche, effektive Dialogflüsse</li>
+                </ul>
+                <strong>Dieser CV ist selbst ein Beispiel:</strong> Chat-Interface + Voice AI Demo — beides von mir konzipiert und implementiert.`,
+            
+            // Voice AI & Chatbots
+            'voice': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
+                <strong>Aktuelle Projekte:</strong>
+                <ul>
+                    <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
+                    <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
+                    <li><strong>LLM-powered Dialoge</strong> — Kontextbewusste, natürliche Gespräche</li>
+                </ul>
+                <strong>Tech-Stack:</strong>
+                <ul>
+                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Claude & GPT-4 für NLU/NLG</li>
+                    <li>RAG-Systeme für Wissenszugriff</li>
+                </ul>
+                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+            
+            'voice ai': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
+                <strong>Aktuelle Projekte:</strong>
+                <ul>
+                    <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
+                    <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
+                    <li><strong>LLM-powered Dialoge</strong> — Kontextbewusste, natürliche Gespräche</li>
+                </ul>
+                <strong>Tech-Stack:</strong>
+                <ul>
+                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Claude & GPT-4 für NLU/NLG</li>
+                    <li>RAG-Systeme für Wissenszugriff</li>
+                </ul>
+                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+            
+            'voice ai und chatbots': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
+                <strong>Aktuelle Projekte:</strong>
+                <ul>
+                    <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
+                    <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
+                    <li><strong>LLM-powered Dialoge</strong> — Kontextbewusste, natürliche Gespräche</li>
+                </ul>
+                <strong>Tech-Stack:</strong>
+                <ul>
+                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Claude & GPT-4 für NLU/NLG</li>
+                    <li>RAG-Systeme für Wissenszugriff</li>
+                </ul>
+                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+            
+            'chatbot': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
+                <strong>Aktuelle Projekte:</strong>
+                <ul>
+                    <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
+                    <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
+                    <li><strong>LLM-powered Dialoge</strong> — Kontextbewusste, natürliche Gespräche</li>
+                </ul>
+                <strong>Tech-Stack:</strong>
+                <ul>
+                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Claude & GPT-4 für NLU/NLG</li>
+                    <li>RAG-Systeme für Wissenszugriff</li>
+                </ul>
+                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+            
+            // LLM Integration
+            'llm': `<strong>LLM-Integration ist zentral für moderne Conversational AI.</strong><br><br>
+                <strong>Meine Erfahrung:</strong>
+                <ul>
+                    <li><strong>Claude & GPT-4</strong> — Für intelligente, kontextbewusste Dialoge</li>
+                    <li><strong>Prompt Engineering</strong> — Optimierte System-Prompts für konsistente Antworten</li>
+                    <li><strong>RAG-Systeme</strong> — Wissensdatenbanken für präzise Antworten</li>
+                    <li><strong>Multi-Agent Systeme</strong> — Orchestrierung mehrerer KI-Komponenten</li>
+                </ul>
+                <strong>Praxis-Beispiel:</strong> Dieser Chatbot nutzt strukturierte Responses — aber ich baue auch LLM-powered Systeme die dynamisch auf jede Frage antworten.`,
+            
+            'llm integration': `<strong>LLM-Integration ist zentral für moderne Conversational AI.</strong><br><br>
+                <strong>Meine Erfahrung:</strong>
+                <ul>
+                    <li><strong>Claude & GPT-4</strong> — Für intelligente, kontextbewusste Dialoge</li>
+                    <li><strong>Prompt Engineering</strong> — Optimierte System-Prompts für konsistente Antworten</li>
+                    <li><strong>RAG-Systeme</strong> — Wissensdatenbanken für präzise Antworten</li>
+                    <li><strong>Multi-Agent Systeme</strong> — Orchestrierung mehrerer KI-Komponenten</li>
+                </ul>
+                <strong>Praxis-Beispiel:</strong> Dieser Chatbot nutzt strukturierte Responses — aber ich baue auch LLM-powered Systeme die dynamisch auf jede Frage antworten.`,
+            
+            // Why me
+            'warum': `<strong>Warum ich der Richtige für Conversational AI Projekte bin:</strong><br><br>
+                <strong>1. Strategie + Hands-on</strong><br>
+                Ich konzipiere nicht nur — ich implementiere selbst. Dieser interaktive CV mit Voice AI ist dafür der Beweis.<br><br>
+                <strong>2. Beratungserfahrung</strong><br>
+                10+ Jahre in der Beratung. Ich verstehe wie man mit Stakeholdern arbeitet, Anforderungen erhebt und Projekte zum Erfolg führt.<br><br>
+                <strong>3. Agile Methodik</strong><br>
+                PSM I zertifiziert. Erfahrung in agilen Teams und iterativer Entwicklung.<br><br>
+                <strong>4. Sofort verfügbar & Remote</strong><br>
+                100% remote-fähig. Deutsch als Muttersprache. Sofort einsatzbereit.`,
+            
+            'warum ich': `<strong>Warum ich der Richtige für Conversational AI Projekte bin:</strong><br><br>
+                <strong>1. Strategie + Hands-on</strong><br>
+                Ich konzipiere nicht nur — ich implementiere selbst. Dieser interaktive CV mit Voice AI ist dafür der Beweis.<br><br>
+                <strong>2. Beratungserfahrung</strong><br>
+                10+ Jahre in der Beratung. Ich verstehe wie man mit Stakeholdern arbeitet, Anforderungen erhebt und Projekte zum Erfolg führt.<br><br>
+                <strong>3. Agile Methodik</strong><br>
+                PSM I zertifiziert. Erfahrung in agilen Teams und iterativer Entwicklung.<br><br>
+                <strong>4. Sofort verfügbar & Remote</strong><br>
+                100% remote-fähig. Deutsch als Muttersprache. Sofort einsatzbereit.`,
+            
+            'warum bin ich der richtige': `<strong>Warum ich der Richtige für Conversational AI Projekte bin:</strong><br><br>
+                <strong>1. Strategie + Hands-on</strong><br>
+                Ich konzipiere nicht nur — ich implementiere selbst. Dieser interaktive CV mit Voice AI ist dafür der Beweis.<br><br>
+                <strong>2. Beratungserfahrung</strong><br>
+                10+ Jahre in der Beratung. Ich verstehe wie man mit Stakeholdern arbeitet, Anforderungen erhebt und Projekte zum Erfolg führt.<br><br>
+                <strong>3. Agile Methodik</strong><br>
+                PSM I zertifiziert. Erfahrung in agilen Teams und iterativer Entwicklung.<br><br>
+                <strong>4. Sofort verfügbar & Remote</strong><br>
+                100% remote-fähig. Deutsch als Muttersprache. Sofort einsatzbereit.`,
+            
+            // Current Role
+            'aktuelle': `<strong>VP Growth bei amnis treasury ag</strong> (2025 → heute)<br><br>
+                Swiss Fintech. Meine Conversational AI Arbeit:
+                <ul>
+                    <li><strong>Voice AI Implementation</strong> — Voicebots für Kundenservice</li>
+                    <li><strong>LLM-Integration</strong> — Claude & GPT-4 für intelligente Automation</li>
+                    <li><strong>Multi-Agent Systeme</strong> — Orchestrierung komplexer AI-Workflows</li>
+                    <li><strong>Anforderungsanalyse</strong> — Von Use Case zu Spezifikation</li>
+                </ul>
+                Parallel: Gründer von <strong>MySCALES</strong> — AI Beratung für den Mittelstand.`,
+            
+            'amnis': `<strong>VP Growth bei amnis treasury ag</strong> (2025 → heute)<br><br>
+                Swiss Fintech. Meine Conversational AI Arbeit:
+                <ul>
+                    <li><strong>Voice AI Implementation</strong> — Voicebots für Kundenservice</li>
+                    <li><strong>LLM-Integration</strong> — Claude & GPT-4 für intelligente Automation</li>
+                    <li><strong>Multi-Agent Systeme</strong> — Orchestrierung komplexer AI-Workflows</li>
+                    <li><strong>Anforderungsanalyse</strong> — Von Use Case zu Spezifikation</li>
+                </ul>
+                Parallel: Gründer von <strong>MySCALES</strong> — AI Beratung für den Mittelstand.`,
+            
+            // MySCALES
+            'myscales': `<strong>MySCALES (SCALES GmbH)</strong> — Gegründet 2023<br>
+                🔗 <a href="https://myscales.ch" target="_blank" style="color: #FF4500;">myscales.ch</a><br><br>
+                <em>Helping businesses understand and implement AI.</em><br><br>
+                <strong>Conversational AI Services:</strong>
+                <ul>
+                    <li>Chatbot & Voicebot Beratung und Implementierung</li>
+                    <li>LLM-Integration für Kundendialoge</li>
+                    <li>Anforderungsanalyse für Conversational AI Projekte</li>
+                    <li>Training und Anpassung von KI-Modellen</li>
+                </ul>
+                Enterprise-Kunden in Finance, Healthcare, Manufacturing.`,
+            
+            // Experience
+            'erfahrung': `<strong>10+ Jahre Beratung und Führung.</strong><br><br>
+                <strong>Aktuell:</strong>
+                <ul>
+                    <li>VP Growth @ amnis (Swiss Fintech) — 2025→</li>
+                    <li>Gründer @ MySCALES (AI Beratung) — 2023→</li>
+                </ul>
+                <strong>Vergangenheit:</strong>
+                <ul>
+                    <li>Gründer @ daita AG — Exit 2026</li>
+                    <li>Business Area Lead @ Consulteer — 35-köpfiges Team aufgebaut</li>
+                    <li>Key Account Manager @ GULP — €6M Umsatz</li>
+                </ul>
+                Ich kenne beide Seiten: Strategie UND Umsetzung.`,
+            
+            // Automation
+            'automation': `<strong>Automatisierung ist der Kern moderner Conversational AI.</strong><br><br>
+                <strong>Was ich automatisiere:</strong>
+                <ul>
+                    <li><strong>Kundeninteraktionen</strong> — First-Level Support via Bot</li>
+                    <li><strong>Workflow-Orchestrierung</strong> — n8n, Make, Custom Pipelines</li>
+                    <li><strong>API-Integration</strong> — CRM, ERP, Ticketing unified</li>
+                    <li><strong>Intelligente Routing</strong> — Bot → Human Handoff</li>
+                </ul>
+                Ziel: Repetitive Aufgaben automatisieren, Menschen für Wertschöpfung freimachen.`,
+            
+            // Cognigy specific
+            'cognigy': `<strong>Zu Cognigy:</strong><br><br>
+                Cognigy ist eine führende Conversational AI Plattform. Meine Skills sind direkt übertragbar:
+                <ul>
+                    <li><strong>Conversation Design</strong> — Plattform-agnostisch anwendbar</li>
+                    <li><strong>Intent/Entity Modellierung</strong> — NLU Konzepte universell</li>
+                    <li><strong>LLM-Integration</strong> — Cognigy unterstützt LLMs, genau mein Bereich</li>
+                    <li><strong>Flow-Design</strong> — Dialogflüsse sind überall ähnlich strukturiert</li>
+                </ul>
+                Neue Plattformen lerne ich schnell — die Konzepte beherrsche ich bereits.`,
+            
+            // Dokumentation
+            'dokumentation': `<strong>Technische Dokumentation gehört zu jedem Projekt.</strong><br><br>
+                <strong>Meine Praxis:</strong>
+                <ul>
+                    <li><strong>Anforderungsdokumentation</strong> — Use Cases, User Stories, Specs</li>
+                    <li><strong>Technische Specs</strong> — API Docs, Integration Guides</li>
+                    <li><strong>Conversation Design Docs</strong> — Dialogflüsse, Intent-Mapping</li>
+                    <li><strong>Runbooks</strong> — Betrieb und Wartung</li>
+                </ul>
+                Gute Dokumentation = nachhaltiger Projekterfolg.`,
+            
+            // Sprachen
+            'sprache': `<strong>Dreisprachig:</strong>
+                <ul>
+                    <li>🇩🇪 <strong>Deutsch</strong> — Muttersprache</li>
+                    <li>🇷🇺 <strong>Russisch</strong> — Muttersprache</li>
+                    <li>🇬🇧 <strong>Englisch</strong> — Fliessend</li>
+                </ul>
+                Projektsprache Deutsch? Kein Problem — es ist meine Muttersprache.`,
+            
+            // Kontakt
+            'kontakt': `<strong>Kontakt:</strong><br><br>
+                📧 <a href="mailto:d.raisich@gmail.com" style="color: #FF4500;">d.raisich@gmail.com</a><br>
+                📱 +41 79 609 39 98<br>
+                🔗 <a href="https://linkedin.com/in/dennis-raisich-435846169" target="_blank" style="color: #FF4500;">LinkedIn</a><br>
+                📍 Zürich, Schweiz<br><br>
+                <strong>Verfügbarkeit:</strong> Sofort | 100% Remote | Vollzeit oder Teilzeit`,
+            
+            // Verfügbarkeit
+            'verfügbar': `<strong>Verfügbarkeit:</strong><br><br>
+                ✅ <strong>Sofort verfügbar</strong><br>
+                ✅ <strong>100% Remote</strong> — Perfekt für verteilte Teams<br>
+                ✅ <strong>Vollzeit oder Teilzeit</strong> — Flexibel<br>
+                ✅ <strong>Projektsprache Deutsch</strong> — Muttersprache<br><br>
+                Bereit für den Start!`,
+            
+            // Default
+            'default': `Gute Frage! Hier sind die Hauptthemen:<br><br>
+                <ul>
+                    <li><strong>"Conversational AI"</strong> — Meine Expertise</li>
+                    <li><strong>"Voice AI"</strong> — Voicebots & Chatbots</li>
+                    <li><strong>"LLM"</strong> — Large Language Model Integration</li>
+                    <li><strong>"Warum ich"</strong> — Meine Stärken</li>
+                    <li><strong>"Erfahrung"</strong> — Karriereübersicht</li>
+                    <li><strong>"Cognigy"</strong> — Plattform-Kompetenz</li>
+                    <li><strong>"Kontakt"</strong> — So erreichen Sie mich</li>
+                </ul>
+                Oder fragen Sie einfach frei — ich antworte gerne!`
+        };
+        
+        function findResponse(input) {
+            const lower = input.toLowerCase().trim();
+            
+            // Check for keyword matches
+            for (const [key, value] of Object.entries(responses)) {
+                if (lower.includes(key) || key.includes(lower)) {
+                    return value;
+                }
+            }
+            
+            // Keyword fallbacks
+            if (lower.includes('voice') || lower.includes('bot') || lower.includes('chat')) return responses['voice'];
+            if (lower.includes('llm') || lower.includes('gpt') || lower.includes('claude') || lower.includes('ki') || lower.includes('model')) return responses['llm'];
+            if (lower.includes('warum') || lower.includes('why') || lower.includes('fit') || lower.includes('richtige')) return responses['warum'];
+            if (lower.includes('job') || lower.includes('arbeit') || lower.includes('aktuell') || lower.includes('amnis')) return responses['aktuelle'];
+            if (lower.includes('scales') || lower.includes('firma') || lower.includes('gründ')) return responses['myscales'];
+            if (lower.includes('erfahr') || lower.includes('karriere') || lower.includes('background')) return responses['erfahrung'];
+            if (lower.includes('automat') || lower.includes('workflow')) return responses['automation'];
+            if (lower.includes('cognigy') || lower.includes('plattform')) return responses['cognigy'];
+            if (lower.includes('doku') || lower.includes('anford') || lower.includes('spec')) return responses['dokumentation'];
+            if (lower.includes('sprach') || lower.includes('deutsch') || lower.includes('english')) return responses['sprache'];
+            if (lower.includes('kontakt') || lower.includes('email') || lower.includes('telefon') || lower.includes('erreich')) return responses['kontakt'];
+            if (lower.includes('verfüg') || lower.includes('start') || lower.includes('remote') || lower.includes('wann')) return responses['verfügbar'];
+            
+            return responses['default'];
+        }
+        
+        function addMessage(content, isUser) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            messageDiv.innerHTML = `<div class="message-content">${content}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function showTyping() {
+            const messagesDiv = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai';
+            typingDiv.id = 'typing';
+            typingDiv.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function hideTyping() {
+            const typingDiv = document.getElementById('typing');
+            if (typingDiv) typingDiv.remove();
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            addMessage(message, true);
+            input.value = '';
+            
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                const response = findResponse(message);
+                addMessage(response, false);
+            }, 800 + Math.random() * 400);
+        }
+        
+        function askQuestion(question) {
+            document.getElementById('userInput').value = question;
+            sendMessage();
+        }
+        
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+        
+        // ============================================
+        // VAPI VOICE CALL INTEGRATION
+        // ============================================
+        
+        let vapiInstance = null;
+        let callActive = false;
+        let callStartTime = null;
+        let timerInterval = null;
+        let vapiSDKLoaded = false;
+        
+        const VAPI_PUBLIC_KEY = 'b78207ac-e51c-4565-8b4f-d2da09ca3f48';
+        const VAPI_ASSISTANT_ID = '7c29f2f1-b0b7-49e6-b162-a6cc79fcaa97';
+        
+        // Load the SDK
+        (function(d, t) {
+            var g = document.createElement(t),
+                s = d.getElementsByTagName(t)[0];
+            g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+            g.defer = true;
+            g.async = true;
+            s.parentNode.insertBefore(g, s);
+            
+            g.onload = function() {
+                console.log('Vapi SDK loaded');
+                vapiSDKLoaded = true;
+            };
+        })(document, "script");
+        
+        function initVapiInstance() {
+            if (vapiInstance) return;
+            
+            vapiInstance = window.vapiSDK.run({
+                apiKey: VAPI_PUBLIC_KEY,
+                assistant: VAPI_ASSISTANT_ID,
+                config: {
+                    hide: true,
+                    position: "bottom-right"
+                }
+            });
+            
+            vapiInstance.on('call-start', () => {
+                console.log('Call started');
+                callActive = true;
+                callStartTime = Date.now();
+                updateCallUI('active');
+                startTimer();
+                addMessage('📞 <strong>Voice Call gestartet!</strong> Sie sprechen jetzt mit meinem Voice AI System.', false);
+            });
+            
+            vapiInstance.on('call-end', () => {
+                console.log('Call ended');
+                callActive = false;
+                updateCallUI('idle');
+                stopTimer();
+                addMessage('📞 <strong>Call beendet.</strong> Fragen Sie gerne weiter im Chat!', false);
+            });
+            
+            vapiInstance.on('error', (error) => {
+                console.error('Vapi error:', error);
+                callActive = false;
+                updateCallUI('idle');
+                stopTimer();
+                addMessage('⚠️ Verbindung fehlgeschlagen. Bitte Mikrofon-Berechtigung prüfen.', false);
+            });
+            
+            vapiInstance.on('speech-start', () => {
+                document.getElementById('callStatusText').textContent = 'AI spricht...';
+            });
+            
+            vapiInstance.on('speech-end', () => {
+                document.getElementById('callStatusText').textContent = 'Hört zu...';
+            });
+        }
+        
+        async function toggleCall() {
+            if (!vapiSDKLoaded || !window.vapiSDK) {
+                alert('Voice System lädt noch. Bitte kurz warten.');
+                return;
+            }
+            
+            if (callActive) {
+                endCall();
+            } else {
+                startCall();
+            }
+        }
+        
+        async function startCall() {
+            updateCallUI('connecting');
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log('Microphone access granted');
+                stream.getTracks().forEach(track => track.stop());
+                
+                initVapiInstance();
+                
+                setTimeout(() => {
+                    vapiInstance.start();
+                }, 200);
+            } catch (error) {
+                console.error('Failed to start call:', error);
+                updateCallUI('idle');
+                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                    addMessage('⚠️ Mikrofon-Zugriff verweigert. Bitte in den Browser-Einstellungen erlauben.', false);
+                } else {
+                    addMessage('⚠️ Call konnte nicht gestartet werden. Bitte Mikrofon-Zugriff erlauben.', false);
+                }
+            }
+        }
+        
+        function endCall() {
+            if (vapiInstance && callActive) {
+                vapiInstance.stop();
+            }
+            callActive = false;
+            updateCallUI('idle');
+            stopTimer();
+        }
+        
+        function updateCallUI(state) {
+            const btn = document.getElementById('callBtn');
+            const btnText = document.getElementById('callBtnText');
+            const overlay = document.getElementById('callOverlay');
+            const statusText = document.getElementById('callStatusText');
+            
+            btn.classList.remove('active', 'connecting');
+            
+            switch(state) {
+                case 'connecting':
+                    btn.classList.add('connecting');
+                    btnText.textContent = 'Verbinde...';
+                    overlay.classList.add('visible');
+                    statusText.textContent = 'Verbinde...';
+                    break;
+                case 'active':
+                    btn.classList.add('active');
+                    btnText.textContent = 'Auflegen';
+                    overlay.classList.add('visible');
+                    statusText.textContent = 'Verbunden';
+                    statusText.classList.add('live');
+                    break;
+                case 'idle':
+                default:
+                    btnText.textContent = 'Voice Demo 🎤';
+                    overlay.classList.remove('visible');
+                    statusText.classList.remove('live');
+                    break;
+            }
+        }
+        
+        function startTimer() {
+            const timerEl = document.getElementById('callTimer');
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+                const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const secs = (elapsed % 60).toString().padStart(2, '0');
+                timerEl.textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            document.getElementById('callTimer').textContent = '00:00';
+        }
+    </script>
+</body>
+</html>
