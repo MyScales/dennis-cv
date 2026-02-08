@@ -943,10 +943,13 @@
             
             vapiInstance.on('error', (error) => {
                 console.error('Vapi error:', error);
+                console.error('Error details:', JSON.stringify(error, null, 2));
                 callActive = false;
                 updateCallUI('idle');
                 stopTimer();
-                addMessage('⚠️ Verbindung fehlgeschlagen. Bitte Mikrofon-Berechtigung prüfen.', false);
+                // Show actual error for debugging
+                const errorMsg = error?.message || error?.error || JSON.stringify(error) || 'Unbekannter Fehler';
+                addMessage('⚠️ Verbindung fehlgeschlagen: ' + errorMsg, false);
             });
             
             vapiInstance.on('speech-start', () => {
