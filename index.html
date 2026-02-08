@@ -452,7 +452,7 @@
                 <svg class="call-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                 </svg>
-                <span id="callBtnText">Voice Demo 🎤</span>
+                <span id="callBtnText">🎙️ Voice Demo</span>
             </button>
             <a href="cv-dennis-raisich.pdf" target="_blank" class="header-btn">📄 CV</a>
             <a href="https://linkedin.com/in/dennis-raisich-435846169" target="_blank" class="header-btn">LinkedIn ↗</a>
@@ -507,7 +507,7 @@
                 <div class="message-content">
                     <strong>Willkommen! Ich bin Dennis' interaktiver Lebenslauf.</strong><br><br>
                     Dieses Chat-Interface demonstriert meine Conversational AI Expertise — Sie interagieren gerade mit einem System, das ich selbst konzipiert habe.<br><br>
-                    <strong>🎙️ Voice Demo:</strong> Klicken Sie oben auf "Voice Demo" → dann auf den grünen Hörer unten rechts → sprechen Sie mit meiner Voice AI!<br><br>
+                    <strong>🎙️ Voice Demo:</strong> Klicken Sie auf den <strong style="color: #10b981;">grünen Telefonhörer</strong> unten rechts, um mit meiner Voice AI zu sprechen!<br><br>
                     Was möchten Sie wissen?
                     <div class="suggestions">
                         <button class="suggestion" onclick="askQuestion('Conversational AI Erfahrung')">🤖 Conversational AI</button>
@@ -886,6 +886,8 @@
             g.onload = function() {
                 console.log('Vapi SDK loaded');
                 vapiSDKLoaded = true;
+                // Initialize immediately so widget appears
+                initVapiInstance();
             };
         })(document, "script");
         
@@ -896,7 +898,6 @@
                 apiKey: VAPI_PUBLIC_KEY,
                 assistant: VAPI_ASSISTANT_ID,
                 config: {
-                    hide: true,
                     position: "bottom-right"
                 }
             });
@@ -949,30 +950,14 @@
         }
         
         async function startCall() {
-            updateCallUI('connecting');
+            // Just highlight the Vapi widget - user clicks it directly
+            addMessage('🎙️ <strong>Klicken Sie auf den grünen Telefonhörer unten rechts</strong> um das Voice-Gespräch zu starten!', false);
             
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                console.log('Microphone access granted');
-                stream.getTracks().forEach(track => track.stop());
-                
-                initVapiInstance();
-                
-                // Show instruction to click the Vapi button
-                addMessage('🎙️ <strong>Klicken Sie jetzt auf den grünen Hörer unten rechts</strong> um das Gespräch zu starten!', false);
-                
-                setTimeout(() => {
-                    vapiInstance.start();
-                }, 200);
-            } catch (error) {
-                console.error('Failed to start call:', error);
-                updateCallUI('idle');
-                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                    addMessage('⚠️ Mikrofon-Zugriff verweigert. Bitte in den Browser-Einstellungen erlauben.', false);
-                } else {
-                    addMessage('⚠️ Call konnte nicht gestartet werden. Bitte Mikrofon-Zugriff erlauben.', false);
-                }
-            }
+            // Flash/highlight the widget area
+            const flashOverlay = document.createElement('div');
+            flashOverlay.style.cssText = 'position:fixed;bottom:20px;right:20px;width:80px;height:80px;border:3px solid #10b981;border-radius:50%;animation:pulse 1s ease-in-out 3;pointer-events:none;z-index:9999;';
+            document.body.appendChild(flashOverlay);
+            setTimeout(() => flashOverlay.remove(), 3000);
         }
         
         function endCall() {
