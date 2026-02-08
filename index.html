@@ -507,7 +507,7 @@
                 <div class="message-content">
                     <strong>Willkommen! Ich bin Dennis' interaktiver Lebenslauf.</strong><br><br>
                     Dieses Chat-Interface demonstriert meine Conversational AI Expertise — Sie interagieren gerade mit einem System, das ich selbst konzipiert habe.<br><br>
-                    <strong>💡 Tipp:</strong> Klicken Sie auf "Voice Demo" oben, um auch meine Voice AI Implementierung zu testen!<br><br>
+                    <strong>🎙️ Voice Demo:</strong> Klicken Sie oben auf "Voice Demo" → dann auf den grünen Hörer unten rechts → sprechen Sie mit meiner Voice AI!<br><br>
                     Was möchten Sie wissen?
                     <div class="suggestions">
                         <button class="suggestion" onclick="askQuestion('Conversational AI Erfahrung')">🤖 Conversational AI</button>
@@ -886,40 +886,17 @@
             g.onload = function() {
                 console.log('Vapi SDK loaded');
                 vapiSDKLoaded = true;
-                // Pre-init the instance so it's ready when user clicks
-                initVapiInstance();
             };
         })(document, "script");
         
-        // Hide Vapi widget completely with CSS
-        const hideVapiCSS = document.createElement('style');
-        hideVapiCSS.textContent = `
-            #vapi-support-btn, 
-            .vapi-btn, 
-            [class*="vapi"] button,
-            iframe[src*="vapi"],
-            div[id^="vapi"] {
-                display: none !important;
-                visibility: hidden !important;
-                opacity: 0 !important;
-                pointer-events: none !important;
-                width: 0 !important;
-                height: 0 !important;
-                position: absolute !important;
-                left: -9999px !important;
-            }
-        `;
-        document.head.appendChild(hideVapiCSS);
-        
         function initVapiInstance() {
             if (vapiInstance) return;
-            if (!window.vapiSDK) return;
             
             vapiInstance = window.vapiSDK.run({
                 apiKey: VAPI_PUBLIC_KEY,
                 assistant: VAPI_ASSISTANT_ID,
                 config: {
-                    hideButton: true,
+                    hide: true,
                     position: "bottom-right"
                 }
             });
@@ -943,13 +920,10 @@
             
             vapiInstance.on('error', (error) => {
                 console.error('Vapi error:', error);
-                console.error('Error details:', JSON.stringify(error, null, 2));
                 callActive = false;
                 updateCallUI('idle');
                 stopTimer();
-                // Show actual error for debugging
-                const errorMsg = error?.message || error?.error || JSON.stringify(error) || 'Unbekannter Fehler';
-                addMessage('⚠️ Verbindung fehlgeschlagen: ' + errorMsg, false);
+                addMessage('⚠️ Verbindung fehlgeschlagen. Bitte Mikrofon-Berechtigung prüfen.', false);
             });
             
             vapiInstance.on('speech-start', () => {
@@ -959,18 +933,12 @@
             vapiInstance.on('speech-end', () => {
                 document.getElementById('callStatusText').textContent = 'Hört zu...';
             });
-            
-            console.log('Vapi instance initialized');
         }
         
         async function toggleCall() {
-            if (!vapiSDKLoaded) {
+            if (!vapiSDKLoaded || !window.vapiSDK) {
                 alert('Voice System lädt noch. Bitte kurz warten.');
                 return;
-            }
-            
-            if (!vapiInstance) {
-                initVapiInstance();
             }
             
             if (callActive) {
@@ -988,14 +956,14 @@
                 console.log('Microphone access granted');
                 stream.getTracks().forEach(track => track.stop());
                 
-                if (!vapiInstance) {
-                    initVapiInstance();
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                }
+                initVapiInstance();
                 
-                // Start call directly
-                vapiInstance.start();
+                // Show instruction to click the Vapi button
+                addMessage('🎙️ <strong>Klicken Sie jetzt auf den grünen Hörer unten rechts</strong> um das Gespräch zu starten!', false);
                 
+                setTimeout(() => {
+                    vapiInstance.start();
+                }, 200);
             } catch (error) {
                 console.error('Failed to start call:', error);
                 updateCallUI('idle');
