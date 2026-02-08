@@ -862,10 +862,10 @@
         }
         
         // ============================================
-        // VAPI VOICE CALL INTEGRATION
+        // VAPI VOICE CALL INTEGRATION (Direct SDK - No Widget)
         // ============================================
         
-        let vapiInstance = null;
+        let vapi = null;
         let callActive = false;
         let callStartTime = null;
         let timerInterval = null;
@@ -874,34 +874,32 @@
         const VAPI_PUBLIC_KEY = 'b78207ac-e51c-4565-8b4f-d2da09ca3f48';
         const VAPI_ASSISTANT_ID = '7c29f2f1-b0b7-49e6-b162-a6cc79fcaa97';
         
-        // Load the SDK
+        // Load the Vapi Web SDK (direct, no widget)
         (function(d, t) {
             var g = document.createElement(t),
                 s = d.getElementsByTagName(t)[0];
-            g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+            g.src = "https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/dist/vapi.umd.min.js";
             g.defer = true;
             g.async = true;
             s.parentNode.insertBefore(g, s);
             
             g.onload = function() {
-                console.log('Vapi SDK loaded');
+                console.log('Vapi Web SDK loaded');
                 vapiSDKLoaded = true;
+                initVapi();
             };
         })(document, "script");
         
-        function initVapiInstance() {
-            if (vapiInstance) return;
+        function initVapi() {
+            if (vapi) return;
+            if (!window.Vapi) {
+                console.error('Vapi not available');
+                return;
+            }
             
-            vapiInstance = window.vapiSDK.run({
-                apiKey: VAPI_PUBLIC_KEY,
-                assistant: VAPI_ASSISTANT_ID,
-                config: {
-                    hide: true,
-                    position: "bottom-right"
-                }
-            });
+            vapi = new window.Vapi(VAPI_PUBLIC_KEY);
             
-            vapiInstance.on('call-start', () => {
+            vapi.on('call-start', () => {
                 console.log('Call started');
                 callActive = true;
                 callStartTime = Date.now();
@@ -910,7 +908,7 @@
                 addMessage('📞 <strong>Voice Call gestartet!</strong> Sie sprechen jetzt mit meinem Voice AI System.', false);
             });
             
-            vapiInstance.on('call-end', () => {
+            vapi.on('call-end', () => {
                 console.log('Call ended');
                 callActive = false;
                 updateCallUI('idle');
@@ -918,7 +916,7 @@
                 addMessage('📞 <strong>Call beendet.</strong> Fragen Sie gerne weiter im Chat!', false);
             });
             
-            vapiInstance.on('error', (error) => {
+            vapi.on('error', (error) => {
                 console.error('Vapi error:', error);
                 callActive = false;
                 updateCallUI('idle');
@@ -926,17 +924,17 @@
                 addMessage('⚠️ Verbindung fehlgeschlagen. Bitte Mikrofon-Berechtigung prüfen.', false);
             });
             
-            vapiInstance.on('speech-start', () => {
+            vapi.on('speech-start', () => {
                 document.getElementById('callStatusText').textContent = 'AI spricht...';
             });
             
-            vapiInstance.on('speech-end', () => {
+            vapi.on('speech-end', () => {
                 document.getElementById('callStatusText').textContent = 'Hört zu...';
             });
         }
         
         async function toggleCall() {
-            if (!vapiSDKLoaded || !window.vapiSDK) {
+            if (!vapiSDKLoaded || !vapi) {
                 alert('Voice System lädt noch. Bitte kurz warten.');
                 return;
             }
@@ -952,29 +950,28 @@
             updateCallUI('connecting');
             
             try {
+                // Request mic permission first
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 console.log('Microphone access granted');
                 stream.getTracks().forEach(track => track.stop());
                 
-                initVapiInstance();
+                // Start call directly - no widget, no second click needed!
+                await vapi.start(VAPI_ASSISTANT_ID);
                 
-                setTimeout(() => {
-                    vapiInstance.start();
-                }, 200);
             } catch (error) {
                 console.error('Failed to start call:', error);
                 updateCallUI('idle');
                 if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
                     addMessage('⚠️ Mikrofon-Zugriff verweigert. Bitte in den Browser-Einstellungen erlauben.', false);
                 } else {
-                    addMessage('⚠️ Call konnte nicht gestartet werden. Bitte Mikrofon-Zugriff erlauben.', false);
+                    addMessage('⚠️ Call konnte nicht gestartet werden: ' + error.message, false);
                 }
             }
         }
         
         function endCall() {
-            if (vapiInstance && callActive) {
-                vapiInstance.stop();
+            if (vapi && callActive) {
+                vapi.stop();
             }
             callActive = false;
             updateCallUI('idle');
