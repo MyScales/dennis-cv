@@ -1,222 +1,478 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dennis Raisich — AI Automation Expert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dennis Raisich - AI Automation Expert</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            font-size: 11pt;
-            line-height: 1.5;
-            color: #1a1a1a;
-            padding: 40px 50px;
-            max-width: 800px;
-            margin: 0 auto;
+        :root {
+            --black: #000;
+            --white: #fff;
+            --orange: #FF4500;
+            --gray: #666;
+            --light: #f4f4f4;
         }
         
-        h1 { font-size: 24pt; font-weight: 700; margin-bottom: 5px; }
-        h2 { font-size: 14pt; font-weight: 600; color: #FF4500; margin: 20px 0 10px; border-bottom: 2px solid #FF4500; padding-bottom: 5px; }
-        h3 { font-size: 12pt; font-weight: 600; margin: 12px 0 5px; }
-        
-        .header { margin-bottom: 25px; }
-        .tagline { font-size: 13pt; color: #555; margin-bottom: 10px; }
-        .contact { font-size: 10pt; color: #666; }
-        .contact a { color: #FF4500; text-decoration: none; }
-        
-        .section { margin-bottom: 20px; }
-        
-        ul { margin-left: 20px; margin-top: 5px; }
-        li { margin-bottom: 3px; }
-        
-        .job { margin-bottom: 15px; }
-        .job-header { display: flex; justify-content: space-between; align-items: baseline; }
-        .job-title { font-weight: 600; }
-        .job-date { font-size: 10pt; color: #666; }
-        .job-company { font-style: italic; color: #555; }
-        .job-desc { margin-top: 5px; font-size: 10pt; }
-        
-        .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-        .skill-tag { background: #f5f5f5; padding: 4px 10px; border-radius: 4px; font-size: 9pt; }
-        
-        .two-col { display: flex; gap: 40px; }
-        .col { flex: 1; }
+        body {
+            font-family: 'Sora', system-ui, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            font-size: 8.5pt;
+            line-height: 1.4;
+        }
         
         @media print {
-            body { padding: 20px 30px; }
-            h2 { break-after: avoid; }
-            .job { break-inside: avoid; }
+            @page { margin: 0; size: A4; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+        
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+        
+        .hero {
+            background: var(--black);
+            color: var(--white);
+            padding: 25px 40px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--orange);
+        }
+        
+        .hero-center { padding-left: 10px; }
+        
+        .name {
+            font-size: 32pt;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        
+        .tagline {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11pt;
+            color: var(--orange);
+            font-weight: 500;
+        }
+        
+        .hero-right {
+            text-align: right;
+            font-size: 8.5pt;
+            line-height: 1.9;
+            color: #aaa;
+        }
+        
+        .hero-right a { color: var(--white); text-decoration: none; }
+        
+        .metrics {
+            background: var(--orange);
+            color: var(--white);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            text-align: center;
+            padding: 12px 0;
+        }
+        
+        .metric { border-right: 1px solid rgba(255,255,255,0.2); }
+        .metric:last-child { border-right: none; }
+        
+        .metric-value {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 18pt;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .metric-label {
+            font-size: 7pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+        
+        .main { display: grid; grid-template-columns: 58% 42%; }
+        
+        .col-left {
+            padding: 18px 20px 18px 35px;
+            border-right: 1px solid #eee;
+        }
+        
+        .col-right {
+            padding: 18px 35px 18px 20px;
+            background: var(--light);
+        }
+        
+        .section { margin-bottom: 14px; }
+        
+        .section-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 8pt;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--orange);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 20px;
+            height: 3px;
+            background: var(--orange);
+        }
+        
+        .exp {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .exp:last-child { border-bottom: none; padding-bottom: 0; }
+        
+        .exp-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+        
+        .exp-role { font-weight: 700; font-size: 10.5pt; }
+        
+        .exp-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 8pt;
+            color: var(--gray);
+        }
+        
+        .exp-company {
+            font-size: 9pt;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .exp-company .tag {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            font-size: 6.5pt;
+            padding: 2px 6px;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        
+        .exp-company .tag.exit { background: var(--orange); }
+        
+        .exp-desc { font-size: 8.5pt; color: #444; line-height: 1.5; }
+        .exp-desc strong { color: var(--black); }
+        
+        .diff {
+            background: var(--black);
+            color: var(--white);
+            padding: 14px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        
+        .diff::before {
+            content: '↗';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20pt;
+            color: var(--orange);
+        }
+        
+        .diff h3 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 8pt;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        
+        .diff .big {
+            font-size: 13pt;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 8px;
+        }
+        
+        .diff p { font-size: 8.5pt; line-height: 1.5; color: #ccc; }
+        
+        .skill-group { margin-bottom: 10px; }
+        .skill-group h4 { font-size: 8pt; font-weight: 600; margin-bottom: 5px; }
+        
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+        
+        .skill-tag {
+            font-size: 7.5pt;
+            padding: 4px 8px;
+            background: var(--white);
+            border-radius: 3px;
+        }
+        
+        .skill-tag.pro { background: var(--black); color: var(--white); }
+        
+        .cred { margin-bottom: 12px; }
+        .cred h4 { font-size: 9pt; font-weight: 600; }
+        .cred p { font-size: 8pt; color: var(--gray); }
+        
+        .lang { display: flex; gap: 15px; flex-wrap: wrap; }
+        
+        .lang-item {
+            background: var(--white);
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-align: center;
+            min-width: 70px;
+        }
+        
+        .lang-item .level {
+            font-size: 7pt;
+            text-transform: uppercase;
+            color: var(--orange);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .lang-item .lang-name { font-size: 9pt; font-weight: 600; }
+        
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 45px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 7.5pt;
+            color: var(--gray);
+            border-top: 1px solid #eee;
+            background: var(--white);
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Dennis Raisich</h1>
-        <div class="tagline">AI Automation Expert — Multi-Agent Systems, Workflow Orchestration, Voice AI</div>
-        <div class="contact">
-            📧 <a href="mailto:dennis@myscales.ch">dennis@myscales.ch</a> · 
-            📱 +41 79 609 39 98 · 
-            🔗 <a href="https://linkedin.com/in/dennis-raisich-435846169">LinkedIn</a> · 
-            📍 Zürich, Schweiz
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>Profil</h2>
-        <p>AI Automation Experte mit 10+ Jahren Erfahrung in Beratung, Sales und Teamführung. Ich verbinde KI-Tools zu intelligenten Workflows — von der Strategie bis zur produktiven Implementierung. Spezialisiert auf Multi-Agent Systeme, Workflow Automation (n8n, Make, Zapier), Voice AI und LLM-Integration.</p>
-    </div>
-    
-    <div class="section">
-        <h2>Kernkompetenzen</h2>
-        <div class="two-col">
-            <div class="col">
-                <h3>AI & Automation</h3>
-                <ul>
-                    <li>Multi-Agent Systeme & Orchestrierung</li>
-                    <li>MCP (Model Context Protocol)</li>
-                    <li>n8n, Make, Zapier, Custom Pipelines</li>
-                    <li>LLM-Integration (Claude, GPT-4)</li>
-                    <li>RAG-Systeme & Prompt Engineering</li>
-                    <li>Coding Agents (Claude Code)</li>
-                </ul>
+    <div class="page">
+        <header class="hero">
+            <img src="dennis-photo.jpg" alt="Dennis Raisich" class="photo">
+            <div class="hero-center">
+                <h1 class="name">Dennis Raisich</h1>
+                <div class="tagline">// AI Automation · Multi-Agent Systems · Strategy to Production</div>
             </div>
-            <div class="col">
-                <h3>Conversational AI</h3>
-                <ul>
-                    <li>Voice AI & Voicebots (Vapi, Voiceflow)</li>
-                    <li>Chatbot-Entwicklung</li>
-                    <li>Conversation Design</li>
-                    <li>Speech-to-Text (Whisper)</li>
-                    <li>Text-to-Speech (ElevenLabs)</li>
-                </ul>
+            <div class="hero-right">
+                Zurich, Switzerland<br>
+                <a href="mailto:dennis@myscales.ch">dennis@myscales.ch</a><br>
+                +41 79 609 39 98<br>
+                <a href="https://linkedin.com/in/dennis-raisich-435846169">LinkedIn ↗</a>
             </div>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>Berufserfahrung</h2>
+        </header>
         
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">VP Growth</span>
-                <span class="job-date">2025 — heute</span>
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value">10+</div>
+                <div class="metric-label">Years Enterprise</div>
             </div>
-            <div class="job-company">amnis treasury ag, Zürich (Swiss Fintech)</div>
-            <div class="job-desc">
-                <ul>
-                    <li>AI Automation & Workflow Implementierung</li>
-                    <li>Voice AI Integration für Kundenservice</li>
-                    <li>Multi-Agent Systeme für interne Prozesse</li>
-                </ul>
+            <div class="metric">
+                <div class="metric-value">€20M+</div>
+                <div class="metric-label">Revenue Track</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">35+</div>
+                <div class="metric-label">Team Built</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">2×</div>
+                <div class="metric-label">Founder + Exit</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">3</div>
+                <div class="metric-label">Languages</div>
             </div>
         </div>
         
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">Gründer & Geschäftsführer</span>
-                <span class="job-date">2023 — heute</span>
+        <div class="main">
+            <div class="col-left">
+                <div class="section">
+                    <h2 class="section-title">Experience</h2>
+                    
+                    <div class="exp">
+                        <div class="exp-top">
+                            <span class="exp-role">VP Growth</span>
+                            <span class="exp-date">2025 → Present</span>
+                        </div>
+                        <div class="exp-company">amnis treasury ag · Swiss Fintech<span class="tag">Current</span></div>
+                        <p class="exp-desc">
+                            <strong>AI Automation & Voice AI:</strong> Multi-agent systems, workflow automation, LLM integration. Requirements engineering & technical documentation.
+                        </p>
+                    </div>
+                    
+                    <div class="exp">
+                        <div class="exp-top">
+                            <span class="exp-role">Founder & Managing Director</span>
+                            <span class="exp-date">2023 → Present</span>
+                        </div>
+                        <div class="exp-company">SCALES GmbH (myscales.ch) · AI Consultancy<span class="tag">Founder</span></div>
+                        <p class="exp-desc">
+                            <strong>AI Automation Consulting:</strong> Workflow automation (n8n, Make), multi-agent systems, voice AI & chatbots for enterprise clients.
+                        </p>
+                    </div>
+                    
+                    <div class="exp">
+                        <div class="exp-top">
+                            <span class="exp-role">Founder & Board Member</span>
+                            <span class="exp-date">2023 → 2026</span>
+                        </div>
+                        <div class="exp-company">daita AG · Data Quality Platform<span class="tag exit">Exited</span></div>
+                        <p class="exp-desc">
+                            Co-founded data quality platform. <strong>CHF 1M+ seed</strong>. Technical docs & specs. <strong>Exited Feb 2026.</strong>
+                        </p>
+                    </div>
+                    
+                    <div class="exp">
+                        <div class="exp-top">
+                            <span class="exp-role">Business Area Lead</span>
+                            <span class="exp-date">2018 → 2022</span>
+                        </div>
+                        <div class="exp-company">Consulteer AG · IT Consulting</div>
+                        <p class="exp-desc">
+                            P&L two business units. <strong>Built 35-person team</strong>. Multi-million CHF revenue. Enterprise digitalization. Scrum.
+                        </p>
+                    </div>
+                    
+                    <div class="exp">
+                        <div class="exp-top">
+                            <span class="exp-role">Key Account Manager</span>
+                            <span class="exp-date">2015 → 2018</span>
+                        </div>
+                        <div class="exp-company">GULP Information Services GmbH</div>
+                        <p class="exp-desc">
+                            <strong>€6M+ annual revenue — Top Performer.</strong> IT freelancer placement for enterprise clients. Built long-term client relationships.
+                        </p>
+                    </div>
+
+                </div>
             </div>
-            <div class="job-company">MySCALES (SCALES GmbH) — AI Automation Beratung</div>
-            <div class="job-desc">
-                <ul>
-                    <li>AI Beratung für mittelständische Unternehmen</li>
-                    <li>Implementierung von Workflow Automation Lösungen</li>
-                    <li>Voice AI & Chatbot Projekte</li>
-                </ul>
+            
+            <div class="col-right">
+                <div class="diff">
+                    <h3>The Difference</h3>
+                    <p class="big">I ship production systems, not slide decks.</p>
+                    <p>Architect + Builder + Consultant. Running my own AI assistant 24/7 with voice & multi-agent orchestration.</p>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">Technical Expertise</h2>
+                    
+                    <div class="skill-group">
+                        <h4>AI & Automation</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag pro">Multi-Agent Systems</span>
+                            <span class="skill-tag pro">n8n</span>
+                            <span class="skill-tag pro">Make</span>
+                            <span class="skill-tag pro">Zapier</span>
+                            <span class="skill-tag pro">MCP</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-group">
+                        <h4>Voice & Conversational AI</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag pro">VAPI</span>
+                            <span class="skill-tag pro">Voiceflow</span>
+                            <span class="skill-tag pro">Dialogflow</span>
+                            <span class="skill-tag">Cognigy</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-group">
+                        <h4>LLMs & AI</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag pro">Claude</span>
+                            <span class="skill-tag pro">GPT-4</span>
+                            <span class="skill-tag pro">Claude Code</span>
+                            <span class="skill-tag pro">RAG</span>
+                            <span class="skill-tag">Whisper</span>
+                            <span class="skill-tag">ElevenLabs</span>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-group">
+                        <h4>Development</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag pro">Python</span>
+                            <span class="skill-tag pro">TypeScript</span>
+                            <span class="skill-tag">REST APIs</span>
+                            <span class="skill-tag">CLI Tools</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">Languages</h2>
+                    <div class="lang">
+                        <div class="lang-item">
+                            <div class="level">Native</div>
+                            <div class="lang-name">German</div>
+                        </div>
+                        <div class="lang-item">
+                            <div class="level">Native</div>
+                            <div class="lang-name">Russian</div>
+                        </div>
+                        <div class="lang-item">
+                            <div class="level">Fluent</div>
+                            <div class="lang-name">English</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title">Education</h2>
+                    <div class="cred">
+                        <h4>B.Sc. Business Engineering</h4>
+                        <p>RWTH Aachen University, Germany</p>
+                    </div>
+                    <div class="cred">
+                        <h4>Professional Scrum Master I</h4>
+                        <p>Scrum.org</p>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">Co-Founder & Geschäftsführer</span>
-                <span class="job-date">2023 — Feb 2026</span>
-            </div>
-            <div class="job-company">daita AG — Data & AI Startup (Exit)</div>
-            <div class="job-desc">
-                <ul>
-                    <li>Aufbau eines Data & AI Startups</li>
-                    <li>Erfolgreicher Exit im Februar 2026</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">Business Area Lead</span>
-                <span class="job-date">2018 — 2023</span>
-            </div>
-            <div class="job-company">Consulteer AG</div>
-            <div class="job-desc">
-                <ul>
-                    <li>Aufbau und Führung eines 35-köpfigen Teams</li>
-                    <li>Verantwortung für Business Development & Delivery</li>
-                    <li>Enterprise Kunden in Finance & Manufacturing</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">Key Account Manager</span>
-                <span class="job-date">2015 — 2018</span>
-            </div>
-            <div class="job-company">GULP Information Services GmbH</div>
-            <div class="job-desc">
-                <ul>
-                    <li>€6M+ Jahresumsatz — Top Performer</li>
-                    <li>IT-Freelancer Vermittlung für Enterprise Kunden</li>
-                    <li>Aufbau langfristiger Kundenbeziehungen</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>Tech Stack</h2>
-        <div class="skills-grid">
-            <span class="skill-tag">n8n</span>
-            <span class="skill-tag">Make</span>
-            <span class="skill-tag">Zapier</span>
-            <span class="skill-tag">Claude</span>
-            <span class="skill-tag">GPT-4</span>
-            <span class="skill-tag">Vapi</span>
-            <span class="skill-tag">Voiceflow</span>
-            <span class="skill-tag">ElevenLabs</span>
-            <span class="skill-tag">Whisper</span>
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">TypeScript</span>
-            <span class="skill-tag">REST APIs</span>
-            <span class="skill-tag">MCP</span>
-            <span class="skill-tag">RAG</span>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>Ausbildung & Zertifikate</h2>
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">B.Sc. Business Engineering</span>
-            </div>
-            <div class="job-company">RWTH Aachen University</div>
-        </div>
-        <div class="job">
-            <div class="job-header">
-                <span class="job-title">Professional Scrum Master I (PSM I)</span>
-            </div>
-            <div class="job-company">Scrum.org</div>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>Sprachen</h2>
-        <p>🇩🇪 Deutsch (Muttersprache) · 🇷🇺 Russisch (Muttersprache) · 🇬🇧 Englisch (fließend)</p>
-    </div>
-    
-    <div class="section" style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 9pt; color: #888;">
-        <strong>Verfügbarkeit:</strong> Sofort · 100% Remote · Projektsprache Deutsch
+        <footer class="footer">
+            <span>Zurich · Switzerland · 2026</span>
+            <span>100% Remote · Available Immediately</span>
+        </footer>
     </div>
 </body>
 </html>
