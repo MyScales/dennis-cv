@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dennis Raisich — Conversational AI Consultant</title>
+    <title>Dennis Raisich — AI Automation Expert</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
         
@@ -444,7 +444,7 @@
     <header class="header">
         <img src="dennis-photo.jpg" alt="Dennis Raisich" class="avatar">
         <div class="header-info">
-            <h1>Dennis Raisich <span class="badge">Conversational AI</span></h1>
+            <h1>Dennis Raisich <span class="badge">AI Automation</span></h1>
             <p><span>●</span> Interaktiver CV — Fragen Sie mich!</p>
         </div>
         <div class="header-right">
@@ -465,12 +465,12 @@
             <div class="stat-label">Jahre Beratung</div>
         </div>
         <div class="stat">
-            <div class="stat-value">Voice</div>
-            <div class="stat-label">AI & Chatbots</div>
+            <div class="stat-value">AI</div>
+            <div class="stat-label">Automation</div>
         </div>
         <div class="stat">
-            <div class="stat-value">LLM</div>
-            <div class="stat-label">Integration</div>
+            <div class="stat-value">Multi</div>
+            <div class="stat-label">Agent Systems</div>
         </div>
         <div class="stat">
             <div class="stat-value">2×</div>
@@ -506,13 +506,13 @@
             <div class="message ai">
                 <div class="message-content">
                     <strong>Willkommen! Ich bin Dennis' interaktiver Lebenslauf.</strong><br><br>
-                    Dieses Chat-Interface demonstriert meine Conversational AI Expertise — Sie interagieren gerade mit einem System, das ich selbst konzipiert habe.<br><br>
+                    Dieses Chat-Interface demonstriert meine AI Automation Expertise — Chat + Voice AI, beides von mir konzipiert und implementiert.<br><br>
                     <strong>🎙️ Voice Demo:</strong> Klicken Sie auf den <strong style="color: #10b981;">grünen Telefonhörer</strong> unten rechts, um mit meiner Voice AI zu sprechen!<br><br>
                     Was möchten Sie wissen?
                     <div class="suggestions">
-                        <button class="suggestion" onclick="askQuestion('Conversational AI Erfahrung')">🤖 Conversational AI</button>
+                        <button class="suggestion" onclick="askQuestion('AI Automation')">🤖 AI Automation</button>
+                        <button class="suggestion" onclick="askQuestion('Workflow Automation')">⚡ Workflows</button>
                         <button class="suggestion" onclick="askQuestion('Voice AI und Chatbots')">🎙️ Voice & Chatbots</button>
-                        <button class="suggestion" onclick="askQuestion('LLM Integration')">🧠 LLM Integration</button>
                         <button class="suggestion" onclick="askQuestion('Warum bin ich der Richtige?')">✅ Warum ich?</button>
                     </div>
                 </div>
@@ -529,30 +529,59 @@
     
     <script>
         const responses = {
-            // Conversational AI
-            'conversational ai': `<strong>Conversational AI ist mein Fokus.</strong><br><br>
-                Was ich heute mache:
+            // AI Automation
+            'ai automation': `<strong>AI Automation ist mein Fokus.</strong><br><br>
+                Ich verbinde KI-Tools zu intelligenten Workflows — nicht Technik um der Technik willen, sondern für echten Business Value.
                 <ul>
-                    <li><strong>Voice AI Systeme</strong> — Voicebots für Kundensupport & Sales</li>
-                    <li><strong>Chatbot-Entwicklung</strong> — Von Konzeption bis Produktion</li>
-                    <li><strong>LLM-Integration</strong> — Claude, GPT-4 für intelligente Dialoge</li>
-                    <li><strong>Conversation Design</strong> — Natürliche, effektive Dialogflüsse</li>
+                    <li><strong>Multi-Agent Systeme</strong> — Mehrere AI-Agenten die zusammenarbeiten</li>
+                    <li><strong>MCP (Model Context Protocol)</strong> — Tool-Integration für Claude & andere LLMs</li>
+                    <li><strong>Workflow Automation</strong> — n8n, Make, Zapier, Custom Pipelines</li>
+                    <li><strong>Voice AI & Chatbots</strong> — Conversational Interfaces</li>
+                    <li><strong>Coding Agents</strong> — Claude Code, AI-gestützte Entwicklung</li>
                 </ul>
-                <strong>Dieser CV ist selbst ein Beispiel:</strong> Chat-Interface + Voice AI Demo — beides von mir konzipiert und implementiert.`,
+                <strong>Mein Ansatz:</strong> Von der Strategie bis zur produktiven Implementierung — ich konzipiere nicht nur, ich baue auch.`,
             
-            'conversational ai erfahrung': `<strong>Conversational AI ist mein Fokus.</strong><br><br>
+            'workflow': `<strong>Workflow Automation — mein täglich Brot.</strong><br><br>
+                <strong>Plattformen die ich beherrsche:</strong>
+                <ul>
+                    <li><strong>n8n</strong> — Self-hosted, komplexe Integrationen, mein Favorit</li>
+                    <li><strong>Make (Integromat)</strong> — Visual Automation für Business</li>
+                    <li><strong>Zapier</strong> — Quick Wins, einfache Integrationen</li>
+                    <li><strong>Custom Code</strong> — Python, Node.js wenn nötig</li>
+                </ul>
+                <strong>AI-Enhanced Workflows:</strong>
+                <ul>
+                    <li>LLM-Calls in Workflows integrieren</li>
+                    <li>Intelligente Entscheidungen automatisieren</li>
+                    <li>Multi-Agent Orchestrierung</li>
+                </ul>`,
+            
+            // Conversational AI
+            'conversational ai': `<strong>AI Automation ist mein Fokus — Conversational AI ist ein Teil davon.</strong><br><br>
                 Was ich heute mache:
                 <ul>
-                    <li><strong>Voice AI Systeme</strong> — Voicebots für Kundensupport & Sales</li>
-                    <li><strong>Chatbot-Entwicklung</strong> — Von Konzeption bis Produktion</li>
-                    <li><strong>LLM-Integration</strong> — Claude, GPT-4 für intelligente Dialoge</li>
-                    <li><strong>Conversation Design</strong> — Natürliche, effektive Dialogflüsse</li>
+                    <li><strong>Multi-Agent Systeme</strong> — Orchestrierung von AI-Agenten für komplexe Workflows</li>
+                    <li><strong>Voice AI & Chatbots</strong> — Voicebots, Chatbots, Conversational Interfaces</li>
+                    <li><strong>LLM-Integration</strong> — Claude, GPT-4, RAG-Systeme, Prompt Engineering</li>
+                    <li><strong>Workflow Automation</strong> — n8n, Make, Zapier, Custom Pipelines</li>
+                    <li><strong>MCP & Tool Orchestration</strong> — Model Context Protocol, CLI-Tools, APIs</li>
                 </ul>
-                <strong>Dieser CV ist selbst ein Beispiel:</strong> Chat-Interface + Voice AI Demo — beides von mir konzipiert und implementiert.`,
+                <strong>Dieser CV ist selbst ein Beispiel:</strong> Chat-Interface + Voice AI Demo — von mir konzipiert und implementiert.`,
+            
+            'conversational ai erfahrung': `<strong>AI Automation ist mein Fokus — Conversational AI ist ein Teil davon.</strong><br><br>
+                Was ich heute mache:
+                <ul>
+                    <li><strong>Multi-Agent Systeme</strong> — Orchestrierung von AI-Agenten für komplexe Workflows</li>
+                    <li><strong>Voice AI & Chatbots</strong> — Voicebots, Chatbots, Conversational Interfaces</li>
+                    <li><strong>LLM-Integration</strong> — Claude, GPT-4, RAG-Systeme, Prompt Engineering</li>
+                    <li><strong>Workflow Automation</strong> — n8n, Make, Zapier, Custom Pipelines</li>
+                    <li><strong>MCP & Tool Orchestration</strong> — Model Context Protocol, CLI-Tools, APIs</li>
+                </ul>
+                <strong>Dieser CV ist selbst ein Beispiel:</strong> Chat-Interface + Voice AI Demo — von mir konzipiert und implementiert.`,
             
             // Voice AI & Chatbots
-            'voice': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
-                <strong>Aktuelle Projekte:</strong>
+            'voice': `<strong>Voice AI & Chatbots — Teil meines AI Automation Portfolios.</strong><br><br>
+                <strong>Conversational AI Projekte:</strong>
                 <ul>
                     <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
                     <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
@@ -560,14 +589,14 @@
                 </ul>
                 <strong>Tech-Stack:</strong>
                 <ul>
-                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Vapi, Voiceflow, Dialogflow, Custom Voice Pipelines</li>
                     <li>Claude & GPT-4 für NLU/NLG</li>
-                    <li>RAG-Systeme für Wissenszugriff</li>
+                    <li>ElevenLabs TTS, Whisper STT</li>
                 </ul>
-                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+                👆 <em>Klicken Sie auf den grünen Hörer unten rechts für eine Live-Demo!</em>`,
             
-            'voice ai': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
-                <strong>Aktuelle Projekte:</strong>
+            'voice ai': `<strong>Voice AI & Chatbots — Teil meines AI Automation Portfolios.</strong><br><br>
+                <strong>Conversational AI Projekte:</strong>
                 <ul>
                     <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
                     <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
@@ -575,14 +604,14 @@
                 </ul>
                 <strong>Tech-Stack:</strong>
                 <ul>
-                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Vapi, Voiceflow, Dialogflow, Custom Voice Pipelines</li>
                     <li>Claude & GPT-4 für NLU/NLG</li>
-                    <li>RAG-Systeme für Wissenszugriff</li>
+                    <li>ElevenLabs TTS, Whisper STT</li>
                 </ul>
-                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+                👆 <em>Klicken Sie auf den grünen Hörer unten rechts für eine Live-Demo!</em>`,
             
-            'voice ai und chatbots': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
-                <strong>Aktuelle Projekte:</strong>
+            'voice ai und chatbots': `<strong>Voice AI & Chatbots — Teil meines AI Automation Portfolios.</strong><br><br>
+                <strong>Conversational AI Projekte:</strong>
                 <ul>
                     <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
                     <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
@@ -590,14 +619,14 @@
                 </ul>
                 <strong>Tech-Stack:</strong>
                 <ul>
-                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Vapi, Voiceflow, Dialogflow, Custom Voice Pipelines</li>
                     <li>Claude & GPT-4 für NLU/NLG</li>
-                    <li>RAG-Systeme für Wissenszugriff</li>
+                    <li>ElevenLabs TTS, Whisper STT</li>
                 </ul>
-                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+                👆 <em>Klicken Sie auf den grünen Hörer unten rechts für eine Live-Demo!</em>`,
             
-            'chatbot': `<strong>Voice AI & Chatbots — meine Kernkompetenz.</strong><br><br>
-                <strong>Aktuelle Projekte:</strong>
+            'chatbot': `<strong>Voice AI & Chatbots — Teil meines AI Automation Portfolios.</strong><br><br>
+                <strong>Conversational AI Projekte:</strong>
                 <ul>
                     <li><strong>Voicebot für Fintech</strong> — Kundenanfragen automatisiert bearbeiten</li>
                     <li><strong>Multi-Channel Chatbots</strong> — Web, WhatsApp, Telefon unified</li>
@@ -605,11 +634,11 @@
                 </ul>
                 <strong>Tech-Stack:</strong>
                 <ul>
-                    <li>Vapi, Dialogflow-Konzepte, Custom Voice Pipelines</li>
+                    <li>Vapi, Voiceflow, Dialogflow, Custom Voice Pipelines</li>
                     <li>Claude & GPT-4 für NLU/NLG</li>
-                    <li>RAG-Systeme für Wissenszugriff</li>
+                    <li>ElevenLabs TTS, Whisper STT</li>
                 </ul>
-                👆 <em>Klicken Sie oben auf "Voice Demo" um meine Voice AI live zu erleben!</em>`,
+                👆 <em>Klicken Sie auf den grünen Hörer unten rechts für eine Live-Demo!</em>`,
             
             // LLM Integration
             'llm': `<strong>LLM-Integration ist zentral für moderne Conversational AI.</strong><br><br>
@@ -698,30 +727,37 @@
                 Enterprise-Kunden in Finance, Healthcare, Manufacturing.`,
             
             // Experience
-            'erfahrung': `<strong>10+ Jahre Beratung und Führung.</strong><br><br>
+            'erfahrung': `<strong>10+ Jahre Beratung, Sales und Führung.</strong><br><br>
                 <strong>Aktuell:</strong>
                 <ul>
-                    <li>VP Growth @ amnis (Swiss Fintech) — 2025→</li>
-                    <li>Gründer @ MySCALES (AI Beratung) — 2023→</li>
+                    <li><strong>VP Growth @ amnis</strong> (Swiss Fintech) — 2025→</li>
+                    <li><strong>Gründer @ MySCALES</strong> (AI Automation Beratung) — 2023→</li>
                 </ul>
                 <strong>Vergangenheit:</strong>
                 <ul>
-                    <li>Gründer @ daita AG — Exit 2026</li>
-                    <li>Business Area Lead @ Consulteer — 35-köpfiges Team aufgebaut</li>
-                    <li>Key Account Manager @ GULP — €6M Umsatz</li>
+                    <li><strong>Gründer @ daita AG</strong> — Data & AI Startup, Exit Feb 2026</li>
+                    <li><strong>Business Area Lead @ Consulteer</strong> — 35-köpfiges Team aufgebaut</li>
+                    <li><strong>Key Account Manager @ GULP</strong> — €6M+ Umsatz, Top Performer, IT-Freelancer Vermittlung</li>
                 </ul>
-                Ich kenne beide Seiten: Strategie UND Umsetzung.`,
+                <strong>Kernkompetenzen durch alle Rollen:</strong> Enterprise Sales, Team Leadership, Stakeholder Management, und jetzt: AI Automation.`,
             
             // Automation
-            'automation': `<strong>Automatisierung ist der Kern moderner Conversational AI.</strong><br><br>
-                <strong>Was ich automatisiere:</strong>
+            'automation': `<strong>AI Automation & Workflow Orchestrierung — mein Kerngebiet.</strong><br><br>
+                <strong>Automation Plattformen:</strong>
                 <ul>
-                    <li><strong>Kundeninteraktionen</strong> — First-Level Support via Bot</li>
-                    <li><strong>Workflow-Orchestrierung</strong> — n8n, Make, Custom Pipelines</li>
-                    <li><strong>API-Integration</strong> — CRM, ERP, Ticketing unified</li>
-                    <li><strong>Intelligente Routing</strong> — Bot → Human Handoff</li>
+                    <li><strong>n8n</strong> — Self-hosted Workflows, komplexe Integrationen</li>
+                    <li><strong>Make (Integromat)</strong> — Visual Automation für Business Prozesse</li>
+                    <li><strong>Zapier</strong> — Quick Wins und einfache Integrationen</li>
+                    <li><strong>Custom Pipelines</strong> — Python, Node.js, REST APIs</li>
                 </ul>
-                Ziel: Repetitive Aufgaben automatisieren, Menschen für Wertschöpfung freimachen.`,
+                <strong>AI-Spezifisch:</strong>
+                <ul>
+                    <li><strong>Multi-Agent Systeme</strong> — Mehrere AI-Agenten orchestrieren</li>
+                    <li><strong>MCP (Model Context Protocol)</strong> — Tool-Integration für LLMs</li>
+                    <li><strong>Claude Code / Coding Agents</strong> — AI-gestützte Entwicklung</li>
+                    <li><strong>RAG-Systeme</strong> — Wissensdatenbanken für AI</li>
+                </ul>
+                Ziel: Intelligente Automatisierung die Business Value liefert, nicht Technik um der Technik willen.`,
             
             // Cognigy specific
             'cognigy': `<strong>Zu Cognigy:</strong><br><br>
@@ -756,7 +792,7 @@
             
             // Kontakt
             'kontakt': `<strong>Kontakt:</strong><br><br>
-                📧 <a href="mailto:d.raisich@gmail.com" style="color: #FF4500;">d.raisich@gmail.com</a><br>
+                📧 <a href="mailto:dennis@myscales.ch" style="color: #FF4500;">dennis@myscales.ch</a><br>
                 📱 +41 79 609 39 98<br>
                 🔗 <a href="https://linkedin.com/in/dennis-raisich-435846169" target="_blank" style="color: #FF4500;">LinkedIn</a><br>
                 📍 Zürich, Schweiz<br><br>
